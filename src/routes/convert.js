@@ -31,11 +31,11 @@ router.post('/video/to/mp4', function (req, res,next) {
     return convert(req,res,next);
 });
 
-router.post('/video/to/gif', function (req, res,next) {
+router.post('/video/to/gif/:ss?', function (req, res,next) {
 
     res.locals.conversion="gif";
     res.locals.format="gif";
-    return convert(req,res,next);
+    return convert(req,res,next,req.params.ss);
 });
 
 router.post('/image/to/jpg', function (req, res,next) {
@@ -46,7 +46,7 @@ router.post('/image/to/jpg', function (req, res,next) {
 });
 
 // convert audio or video or image to mp3 or mp4 or jpg
-function convert(req,res,next) {
+function convert(req,res,next,position="00:00:00.000") {
     let format = res.locals.format;
     let conversion = res.locals.conversion;
     logger.debug(`path: ${req.path}, conversion: ${conversion}, format: ${format}`);
@@ -96,15 +96,17 @@ function convert(req,res,next) {
             '-c:v gif',
             '-f gif',
             '-t 5',
-            '-ss 00:00:02.350'
+            `-ss ${position}`
         ];
         ffmpegParams.inputOptions=[
             '-r 60'
         ];
     }
 
+
     let savedFile = res.locals.savedFile;
     let outputFile = savedFile + '-output.' + ffmpegParams.extension;
+    logger.debug(`outputOptions: ${ffmpegParams.outputOptions}`);
     logger.debug(`begin conversion from ${savedFile} to ${outputFile}`)
 
     //ffmpeg processing... converting file...
