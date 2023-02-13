@@ -31,6 +31,13 @@ router.post('/video/to/mp4', function (req, res,next) {
     return convert(req,res,next);
 });
 
+router.post('/video/to/gif', function (req, res,next) {
+
+    res.locals.conversion="gif";
+    res.locals.format="gif";
+    return convert(req,res,next);
+});
+
 router.post('/image/to/jpg', function (req, res,next) {
 
     res.locals.conversion="image";
@@ -79,6 +86,22 @@ function convert(req,res,next) {
             '-b:a 128k',
         ];
     }
+    if (conversion == "gif")
+    {
+        ffmpegParams.outputOptions=[
+            '-loop 0',
+            '-vf scale=520:-1',
+            '-r 14',
+            '-crf 23',
+            '-c:v gif',
+            '-f gif',
+            '-t 5',
+            '-ss 00:00:02.350'
+        ];
+        ffmpegParams.inputOptions=[
+            '-r 60'
+        ];
+    }
 
     let savedFile = res.locals.savedFile;
     let outputFile = savedFile + '-output.' + ffmpegParams.extension;
@@ -88,6 +111,7 @@ function convert(req,res,next) {
     let ffmpegConvertCommand = ffmpeg(savedFile);
     ffmpegConvertCommand
             .renice(constants.defaultFFMPEGProcessPriority)
+            .inputOptions(ffmpegParams.inputOptions)
             .outputOptions(ffmpegParams.outputOptions)
             .on('error', function(err) {
                 logger.error(`${err}`);

@@ -16,7 +16,7 @@
 #
 #####################################################################
 
-FROM node:12.16.2-alpine3.11 as build
+FROM node:18.14-alpine3.16 as build
 
 RUN apk add --no-cache git
 
@@ -32,10 +32,10 @@ COPY ./src .
 RUN npm install
 
 # Create single binary file
-RUN pkg --targets node12-alpine-x64 /usr/src/app/package.json
+RUN pkg --targets node18-alpine-x64 /usr/src/app/package.json
 
 
-FROM jrottenberg/ffmpeg:4.2-alpine311
+FROM jrottenberg/ffmpeg:4.0.6-alpine313
 
 # Create user and change workdir
 RUN adduser --disabled-password --home /home/ffmpgapi ffmpgapi
