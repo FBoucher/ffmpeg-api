@@ -109,21 +109,41 @@ function convert(req,res,next) {
 
     //ffmpeg processing... converting file...
     let ffmpegConvertCommand = ffmpeg(savedFile);
-    ffmpegConvertCommand
-            .renice(constants.defaultFFMPEGProcessPriority)
-            .inputOptions(ffmpegParams.inputOptions)
-            .outputOptions(ffmpegParams.outputOptions)
-            .on('error', function(err) {
-                logger.error(`${err}`);
-                utils.deleteFile(savedFile);
-                res.writeHead(500, {'Connection': 'close'});
-                res.end(JSON.stringify({error: `${err}`}));
-            })
-            .on('end', function() {
-                utils.deleteFile(savedFile);
-                return utils.downloadFile(outputFile,null,req,res,next);
-            })
-            .save(outputFile);
+    if(conversion == "gif")
+    {
+        ffmpegConvertCommand
+                .renice(constants.defaultFFMPEGProcessPriority)
+                .inputOptions(ffmpegParams.inputOptions)
+                .outputOptions(ffmpegParams.outputOptions)
+                .on('error', function(err) {
+                    logger.error(`${err}`);
+                    utils.deleteFile(savedFile);
+                    res.writeHead(500, {'Connection': 'close'});
+                    res.end(JSON.stringify({error: `${err}`}));
+                })
+                .on('end', function() {
+                    utils.deleteFile(savedFile);
+                    return utils.downloadFile(outputFile,null,req,res,next);
+                })
+                .save(outputFile);
+    }
+    else{
+        ffmpegConvertCommand
+                .renice(constants.defaultFFMPEGProcessPriority)
+                .outputOptions(ffmpegParams.outputOptions)
+                .on('error', function(err) {
+                    logger.error(`${err}`);
+                    utils.deleteFile(savedFile);
+                    res.writeHead(500, {'Connection': 'close'});
+                    res.end(JSON.stringify({error: `${err}`}));
+                })
+                .on('end', function() {
+                    utils.deleteFile(savedFile);
+                    return utils.downloadFile(outputFile,null,req,res,next);
+                })
+                .save(outputFile);
+    }
+
         
 }
 
