@@ -43,6 +43,9 @@ require('express-readme')(app, {
     routes: ['/'],
 });
 
+app.use('/submit', express.static('index2.html'));
+
+
 const server = app.listen(constants.serverPort, function() {
     let host = server.address().address;
     let port = server.address().port;
@@ -75,3 +78,5 @@ app.use(function(err, req, res, next){
     res.end(`${err.message}\n`);
     
 });
+
+

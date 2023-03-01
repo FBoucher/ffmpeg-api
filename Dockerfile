@@ -44,6 +44,7 @@ WORKDIR /home/ffmpgapi
 # Copy files from build stage
 COPY --from=build /usr/src/app/ffmpegapi .
 COPY --from=build /usr/src/app/index.md .
+COPY --from=build /usr/src/app/index2.html .
 RUN chown ffmpgapi:ffmpgapi * && chmod 755 ffmpegapi
 
 EXPOSE 3000
