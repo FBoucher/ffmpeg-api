@@ -29,8 +29,11 @@
 						<input id="ss" type="text" value="00:00:00.000" class="form-control" disabled/>
 					</div>
 				</div>
-
 				<button type="submit" id="submit" class="p-3 btn btn-primary">Submit</button>
+				<button id="fakeButton" class="btn btn-primary d-none " type="button" disabled>
+					<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+					<span class="sr-only">Generating...</span>
+				</button>
 			</form>
 		</div>
 	</div>
@@ -38,6 +41,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 	<script>
 		let convertURL = '/convert/video/to/gif/';
+		let submitEvent;
 		$('#ssCheck').change(function() {
 			if(this.checked) {
 				$('#ss').prop('disabled', false);
@@ -51,8 +55,11 @@
 			if ($('#ssCheck').is(':checked')) {
 				customURL = convertURL + $('#ss').val();
 			}
-			$('#formGIF').attr('action', customURL).submit();
+			$('#fakeButton').removeClass('d-none');
+			$('#submit').addClass('d-none');
+			submitEvent = $('#formGIF').attr('action', customURL).submit();
 		});
+
 	</script>
 </body>
 </html>
